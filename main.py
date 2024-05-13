@@ -54,7 +54,7 @@ while running:
 
     # Draw the snake
     for pos in snake_pos:
-        pygame.draw.rect(screen, GREEN, (pos[0], pos[1], 10, 10))
+        pygame.draw.rect(screen, GREEN, (int(pos[0]), int(pos[1]), 10, 10))
 
     # Draw the food
     pygame.draw.rect(screen, RED, (food_pos[0], food_pos[1], 10, 10))
