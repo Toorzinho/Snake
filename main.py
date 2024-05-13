@@ -1,28 +1,32 @@
 import pygame
+import random
 
-# Initiate the game
+# Initialize Pygame
 pygame.init()
 
-# Display
-screen1 = pygame.display.set_mode((800,600))
+# Set up the display
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Snake Game")
 
-# Background
-background = pygame.image.load('mafia.jpg')
+# Colors
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
 
-# Title and Icon#
-pygame.display.set_caption("Mafiaso")
-icon = pygame.image.load('mafia.jpg')
-pygame.display.set_icon(icon) 
-
+# Snake initial position, length, and speed
+snake_pos = [(WIDTH // 2, HEIGHT // 2)]
+snake_length = 1
+speed = 5
+direction = 'RIGHT'
 
 # Game loop
-running = True 
+running = True
 while running:
-    
-    screen1.fill((171,137,71))
+    screen.fill(WHITE)
 
-    screen1.blit(background,(0,0))
-    
+    # Event handling
     for event in pygame.event.get():
-        if event.type == pygame.QUIT: 
+        if event.type == pygame.QUIT:
             running = False
+        
