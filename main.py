@@ -20,6 +20,9 @@ snake_length = 1
 speed = 5
 direction = 'RIGHT'
 
+# Food initial position
+food_pos = (random.randint(0, (WIDTH - 10) // 10) * 10, random.randint(0, (HEIGHT - 10) // 10) * 10)
+
 # Game loop
 running = True
 while running:
@@ -38,8 +41,8 @@ while running:
                 direction = 'LEFT'
             elif event.key == pygame.K_RIGHT and direction != 'LEFT':
                 direction = 'RIGHT'
-                
-     # Move the snake
+
+    # Move the snake
     if direction == 'UP':
         snake_pos[0] = (snake_pos[0][0], snake_pos[0][1] - speed)
     elif direction == 'DOWN':
@@ -48,3 +51,10 @@ while running:
         snake_pos[0] = (snake_pos[0][0] - speed, snake_pos[0][1])
     elif direction == 'RIGHT':
         snake_pos[0] = (snake_pos[0][0] + speed, snake_pos[0][1])
+
+    # Draw the snake
+    for pos in snake_pos:
+        pygame.draw.rect(screen, GREEN, (pos[0], pos[1], 10, 10))
+
+    # Draw the food
+    pygame.draw.rect(screen, RED, (food_pos[0], food_pos[1], 10, 10))
