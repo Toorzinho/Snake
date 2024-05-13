@@ -58,3 +58,17 @@ while running:
 
     # Draw the food
     pygame.draw.rect(screen, RED, (food_pos[0], food_pos[1], 10, 10))
+    
+    # Check if snake eats the food
+    if snake_pos[0] == food_pos:
+        snake_length += 1
+        food_pos = (random.randint(0, (WIDTH - 10) // 10) * 10, random.randint(0, (HEIGHT - 10) // 10) * 10)
+
+    # Update snake's length
+    while len(snake_pos) > snake_length:
+        snake_pos.pop()
+
+    # Update the display
+    pygame.display.update()
+
+pygame.quit()
