@@ -15,9 +15,9 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
 # Snake initial position, length, and speed
-snake_pos = [(WIDTH // 2, HEIGHT // 2)]
+snake_segments = [(WIDTH // 2, HEIGHT // 2)]
 snake_length = 1
-speed = 5
+speed = 10
 direction = 'RIGHT'
 
 # Food initial position
@@ -25,6 +25,7 @@ food_pos = (random.randint(0, (WIDTH - 10) // 10) * 10, random.randint(0, (HEIGH
 
 # Game loop
 running = True
+clock = pygame.time.Clock()
 while running:
     screen.fill(WHITE)
 
@@ -44,31 +45,36 @@ while running:
 
     # Move the snake
     if direction == 'UP':
-        snake_pos[0] = (snake_pos[0][0], snake_pos[0][1] - speed)
+        new_head = (snake_segments[0][0], snake_segments[0][1] - speed)
     elif direction == 'DOWN':
-        snake_pos[0] = (snake_pos[0][0], snake_pos[0][1] + speed)
+        new_head = (snake_segments[0][0], snake_segments[0][1] + speed)
     elif direction == 'LEFT':
-        snake_pos[0] = (snake_pos[0][0] - speed, snake_pos[0][1])
+        new_head = (snake_segments[0][0] - speed, snake_segments[0][1])
     elif direction == 'RIGHT':
-        snake_pos[0] = (snake_pos[0][0] + speed, snake_pos[0][1])
+        new_head = (snake_segments[0][0] + speed, snake_segments[0][1])
+
+    snake_segments.insert(0, new_head)
 
     # Draw the snake
-    for pos in snake_pos:
-        pygame.draw.rect(screen, GREEN, (pos[0], pos[1], 10, 10))
+    for segment in snake_segments:
+        pygame.draw.rect(screen, GREEN, (segment[0], segment[1], 10, 10))
 
     # Draw the food
     pygame.draw.rect(screen, RED, (food_pos[0], food_pos[1], 10, 10))
 
     # Check if snake eats the food
-    if snake_pos[0] == food_pos:
+    if snake_segments[0] == food_pos:
         snake_length += 1
         food_pos = (random.randint(0, (WIDTH - 10) // 10) * 10, random.randint(0, (HEIGHT - 10) // 10) * 10)
 
     # Update snake's length
-    while len(snake_pos) > snake_length:
-        snake_pos.pop()
+    while len(snake_segments) > snake_length:
+        snake_segments.pop()
 
     # Update the display
     pygame.display.update()
+
+    # Cap the frame rate
+    clock.tick(15)
 
 pygame.quit()
