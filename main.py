@@ -1,182 +1,182 @@
-import turtle
-import time
-import random
+import turtle # Importér turtle-grafikmodulet
+import time # Importér time-modulet til forsinkelser
+import random # Importér random-modulet til tilfældige tal
 
-delay = 0.1
+delay = 0.1 # Sæt forsinkelsen for spillets hastighed
 
 # Score
-score = 0                        # Starts with 0
-high_score = 0                   # Starts with 0
+score = 0 # Initialiser scoren
+high_score = 0 # Initialiser højeste score
 
-# Set up the screen
-wn = turtle.Screen()
-wn.title("Snake")                # Game Name
-wn.bgcolor("green")              # Background Color
-wn.setup(width=600, height=600)  # Screen
-wn.tracer(0)                     # Turns off the screen updates
+# Opsætning af skærmen
+wn = turtle.Screen() # Opret et skærmobjekt
+wn.title("Snake") # Sæt vinduets titel
+wn.bgcolor("green") # Sæt baggrundsfarven til grøn
+wn.setup(width=600, height=600) # Sæt vinduets dimensioner
+wn.tracer(0) # Slå skærmopdateringer fra for glattere animation
 
-# Snake head
-head = turtle.Turtle()           # Using turtle you can draw the snake's head 
-head.speed(0)                    # Giving the head a speed 
-head.shape("square")             # Giving the head a shape
-head.color("black")              # Giving the head a color 
-head.penup()                     # Giving the head a penup (No drawing when moving)
-head.goto(0,0)                   # Giving the head a coordinate 
-head.direction = "stop"          # Giving the head a direction 
+# Slangehoved
+head = turtle.Turtle() # Opret et turtle-objekt til slangens hoved
+head.speed(0) # Sæt turtle-hastigheden til maksimal (ingen animationsforsinkelse)
+head.shape("square") # Sæt turtle-formen til en firkant
+head.color("black") # Sæt turtle-farven til sort
+head.penup() # Deaktiver tegning, når turtle bevæger sig
+head.goto(0,0) # Flyt turtle til midten af skærmen
+head.direction = "stop" # Initialiser hovedets retning til stop
 
-# Snake food
-food = turtle.Turtle()           # Using turtle you can draw food 
-food.speed(0)                    # Giving food a set speed
-food.shape("circle")             # Giving food a set shape
-food.color("red")                # Giving food a set color 
-food.penup()                     # Giving food a set penup (No drawing when moving)
-food.goto(0,100)                 # Giving food a set coordinate 
+# Slangemad
+food = turtle.Turtle() # Opret et turtle-objekt til maden
+food.speed(0) # Sæt turtle-hastigheden til maksimal (ingen animationsforsinkelse)
+food.shape("circle") # Sæt turtle-formen til en cirkel
+food.color("red") # Sæt turtle-farven til rød
+food.penup() # Deaktiver tegning, når turtle bevæger sig
+food.goto(0,100) # Flyt maden til en startposition
 
-segments = []                    # Creates a list for segments 
+segments = [] # Initialiser en tom liste til slangens kropssegmenter
 
 # Pen
-pen = turtle.Turtle()            # Using turtle you can draw the pen that draws the rest of the snake  
-pen.speed(0)                     # Giving pen a set speed
-pen.shape("square")              # Giving pen a set shape
-pen.color("white")               # Giving pen a set color 
-pen.penup()                      # Giving pen a set penup (No drawing when moving)
-pen.hideturtle()                 # Giving pen an invisible state 
-pen.goto(0, 260)                 # Giving pen a coordinate 
-pen.write("Score: 0  High Score: 0", align="center", font=("Courier", 24, "normal")) # Creating Highscore
+pen = turtle.Turtle() # Opret et turtle-objekt til at skrive scoren
+pen.speed(0) # Sæt turtle-hastigheden til maksimal (ingen animationsforsinkelse)
+pen.shape("square") # Sæt turtle-formen til en firkant (ikke synlig)
+pen.color("white") # Sæt turtle-farven til hvid
+pen.penup() # Deaktiver tegning, når turtle bevæger sig
+pen.hideturtle() # Skjul turtle-ikonet
+pen.goto(0, 260) # Flyt pennen til toppen af skærmen
+pen.write("Score: 0  High Score: 0", align="center", font=("Courier", 24, "normal")) # Skriv den initiale score
 
-# Functions
-def go_up():                     # Going up
-    if head.direction != "down":
-        head.direction = "up"
+# Funktioner
+def go_up(): # Funktion til at sætte hovedets retning til op
+    if head.direction != "down": # Forhindre slangen i at gå i modsat retning
+        head.direction = "up" # Sæt retningen til op
 
-def go_down():                   # Going down
-    if head.direction != "up":
-        head.direction = "down"
+def go_down(): # Funktion til at sætte hovedets retning til ned
+    if head.direction != "up": # Forhindre slangen i at gå i modsat retning
+        head.direction = "down" # Sæt retningen til ned
 
-def go_left():                   # Going left
-    if head.direction != "right":
-        head.direction = "left"
+def go_left(): # Funktion til at sætte hovedets retning til venstre
+    if head.direction != "right": # Forhindre slangen i at gå i modsat retning
+        head.direction = "left" # Sæt retningen til venstre
 
-def go_right():                  # Going right
-    if head.direction != "left":
-        head.direction = "right"
+def go_right(): # Funktion til at sætte hovedets retning til højre
+    if head.direction != "left": # Forhindre slangen i at gå i modsat retning
+        head.direction = "right" # Sæt retningen til højre
 
-def move():                      # Bevægelse
-    if head.direction == "up":   # Bruger hovedet til at bestemme y koordinaten 
-        y = head.ycor()
-        head.sety(y + 20)        # Giver y koordinaten en værdi 
+def move(): # Funktion til at bevæge slangens hoved i den nuværende retning
+    if head.direction == "up": # Hvis retningen er op
+        y = head.ycor() # Hent den nuværende y-koordinat
+        head.sety(y + 20) # Flyt hovedet op med 20 enheder
 
-    if head.direction == "down": # Gører det samme
-        y = head.ycor()
-        head.sety(y - 20)
+    if head.direction == "down": # Hvis retningen er ned
+        y = head.ycor() # Hent den nuværende y-koordinat
+        head.sety(y - 20) # Flyt hovedet ned med 20 enheder
 
-    if head.direction == "left": # Gører det samme
-        x = head.xcor()
-        head.setx(x - 20)
+    if head.direction == "left": # Hvis retningen er venstre
+        x = head.xcor() # Hent den nuværende x-koordinat
+        head.setx(x - 20) # Flyt hovedet til venstre med 20 enheder
 
-    if head.direction == "right": # Gører det samme
-        x = head.xcor()
-        head.setx(x + 20)
+    if head.direction == "right": # Hvis retningen er højre
+        x = head.xcor() # Hent den nuværende x-koordinat
+        head.setx(x + 20) # Flyt hovedet til højre med 20 enheder
 
-# Keyboard bindings
-wn.listen()                       # Bruger skærm tegning til at lytte til inout 
-wn.onkeypress(go_up, "w")         # Bruger de definere variabler til at bevæge slangen
-wn.onkeypress(go_down, "s")       # Bruger de definere variabler til at bevæge slangen
-wn.onkeypress(go_left, "a")       # Bruger de definere variabler til at bevæge slangen
-wn.onkeypress(go_right, "d")      # Bruger de definere variabler til at bevæge slangen
+# Tastaturbindinger
+wn.listen() # Lyt efter tastaturinput
+wn.onkeypress(go_up, "w") # Kald funktionen go_up, når "w"-tasten trykkes
+wn.onkeypress(go_down, "s") # Kald funktionen go_down, når "s"-tasten trykkes
+wn.onkeypress(go_left, "a") # Kald funktionen go_left, når "a"-tasten trykkes
+wn.onkeypress(go_right, "d") # Kald funktionen go_right, når "d"-tasten trykkes
 
-# Main game loop
-while True:
-    wn.update()                   # Da vores skærm opdateres konstant, så opdaterer vi skærmen
+# Hovedspilsløkke
+while True: # Uendelig løkke til spillet
+    wn.update() # Opdater skærmen
 
-    # Check for a collision with the border
-    if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:  # Hvis slangen rammer kanten
-        time.sleep(1)             # Så stopper spillet i et sekund
-        head.goto(0,0)            # Slangen starter forfra ved koordinaterne (0,0)
-        head.direction = "stop"   # Derefter stopper slangen med at bevæge sig 
+    # Tjek for en kollision med grænsen
+    if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290: # Hvis hovedet rammer grænsen
+        time.sleep(1) # Pause i 1 sekund
+        head.goto(0,0) # Flyt hovedet til midten
+        head.direction = "stop" # Stop hovedets bevægelse
 
-        # Hide the segments
-        for segment in segments:  
-            segment.goto(1000, 1000)
+        # Skjul segmenterne
+        for segment in segments: # For hvert segment i kroppen
+            segment.goto(1000, 1000) # Flyt det ud af skærmen
         
-        # Clear the segments list
-        segments.clear()
+        # Ryd segmentlisten
+        segments.clear() # Fjern alle segmenter fra listen
 
-        # Reset the score
-        score = 0
+        # Nulstil scoren
+        score = 0 # Nulstil scoren til 0
 
-        # Reset the delay
-        delay = 0.1
+        # Nulstil forsinkelsen
+        delay = 0.1 # Nulstil spillets hastighed
 
-        pen.clear()
-        pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal")) 
+        pen.clear() # Ryd den tidligere score
+        pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal")) # Skriv den opdaterede score
 
+    # Tjek for en kollision med maden
+    if head.distance(food) < 20: # Hvis afstanden mellem hovedet og maden er mindre end 20 enheder
+        # Flyt maden til et tilfældigt sted
+        x = random.randint(-290, 290) # Generér en tilfældig x-koordinat
+        y = random.randint(-290, 290) # Generér en tilfældig y-koordinat
+        food.goto(x,y) # Flyt maden til den tilfældige position
 
-    # Check for a collision with the food
-    if head.distance(food) < 20:
-        # Move the food to a random spot
-        x = random.randint(-290, 290)
-        y = random.randint(-290, 290)
-        food.goto(x,y)
+        # Tilføj et segment
+        new_segment = turtle.Turtle() # Opret et nyt turtle-objekt til det nye segment
+        new_segment.speed(0) # Sæt turtle-hastigheden til maksimal (ingen animationsforsinkelse)
+        new_segment.shape("square") # Sæt turtle-formen til en firkant
+        new_segment.color("grey") # Sæt turtle-farven til grå
+        new_segment.penup() # Deaktiver tegning, når turtle bevæger sig
+        segments.append(new_segment) # Tilføj det nye segment til segmentlisten
 
-        # Add a segment
-        new_segment = turtle.Turtle()
-        new_segment.speed(0)
-        new_segment.shape("square")
-        new_segment.color("grey")
-        new_segment.penup()
-        segments.append(new_segment)
+        # Forkort forsinkelsen
+        delay -= 0.001 # Øg spillets hastighed
 
-        # Shorten the delay
-        delay -= 0.001
+        # Øg scoren
+        score += 10 # Øg scoren med 10 point
 
-        # Increase the score
-        score += 10
-
-        if score > high_score:
-            high_score = score
+        if score > high_score: # Hvis den nuværende score er højere end højeste score
+            high_score = score # Opdater højeste score
         
-        pen.clear()
-        pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal")) 
+        pen.clear() # Ryd den tidligere score
+        pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal")) # Skriv den opdaterede score
 
-    # Move the end segments first in reverse order
-    for index in range(len(segments)-1, 0, -1):
-        x = segments[index-1].xcor()
-        y = segments[index-1].ycor()
-        segments[index].goto(x, y)
+    # Flyt de bagerste segmenter først i omvendt rækkefølge
+    for index in range(len(segments)-1, 0, -1): # Gennemgå segmenterne i omvendt rækkefølge
+        x = segments[index-1].xcor() # Hent x-koordinaten for det forrige segment
+        y = segments[index-1].ycor() # Hent y-koordinaten for det forrige segment
+        segments[index].goto(x, y) # Flyt det nuværende segment til positionen for det forrige segment
 
-    # Move segment 0 to where the head is
-    if len(segments) > 0:
-        x = head.xcor()
-        y = head.ycor()
-        segments[0].goto(x,y)
+        # Flyt segment 0 til hvor hovedet er
+    if len(segments) > 0: # Hvis der er segmenter i listen
+        x = head.xcor() # Hent hovedets x-koordinat
+        y = head.ycor() # Hent hovedets y-koordinat
+        segments[0].goto(x,y) # Flyt det første segment til hovedets position
 
-    move()    
+    move() # Kald move-funktionen for at bevæge hovedet
 
-    # Check for head collision with the body segments
-    for segment in segments:
-        if segment.distance(head) < 20:
-            time.sleep(1)
-            head.goto(0,0)
-            head.direction = "stop"
+    # Tjek for kollision mellem hovedet og kropssegmenterne
+    for segment in segments: # For hvert segment i kroppen
+        if segment.distance(head) < 20: # Hvis afstanden mellem hovedet og segmentet er mindre end 20 enheder
+            time.sleep(1) # Pause i 1 sekund
+            head.goto(0,0) # Flyt hovedet til midten
+            head.direction = "stop" # Stop hovedets bevægelse
         
-            # Hide the segments
-            for segment in segments:
-                segment.goto(1000, 1000)
+            # Skjul segmenterne
+            for segment in segments: # For hvert segment i kroppen
+                segment.goto(1000, 1000) # Flyt det ud af skærmen
         
-            # Clear the segments list
-            segments.clear()
+            # Ryd segmentlisten
+            segments.clear() # Fjern alle segmenter fra listen
 
-            # Reset the score
-            score = 0
+            # Nulstil scoren
+            score = 0 # Nulstil scoren til 0
 
-            # Reset the delay
-            delay = 0.1
+            # Nulstil forsinkelsen
+            delay = 0.1 # Nulstil spillets hastighed
         
-            # Update the score display
-            pen.clear()
-            pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
+            # Opdater scorevisningen
+            pen.clear() # Ryd den tidligere score
+            pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal")) # Skriv den opdaterede score
 
-    time.sleep(delay)
+    time.sleep(delay) # Vent i den angivne forsinkelsestid
 
-wn.mainloop()
+wn.mainloop() # Hold vinduet åbent
+
